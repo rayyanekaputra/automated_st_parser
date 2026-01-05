@@ -18,14 +18,17 @@ else:
     print("File does not exist")
 
 ds = pd.read_csv(file_drive, sep=",")
-ds = ds.iloc[:,:-2]
+ds = ds.iloc[:,0:18] #just incase lebih ki
 ds.drop(columns=["NO"], inplace=True)
 ds.head(2)
 #### Bersihkan (,)
 ds = ds[~ds['ITEM NAME'].isna()]
-ds['INVTR'] = ds['INVTR'].str.replace(pat=",",repl="",regex=False)
-ds['SELISIH'] = ds['SELISIH'].str.replace(pat=",",repl="",regex=False)
 
+#BISA CHECK .dtype itu dari numpy dgn (xxx.dtype).__class__ berarti harus pake tipe data numpy 
+if (ds['INVTR'].dtype == np.object_):
+    ds['INVTR'] = ds['INVTR'].str.replace(pat=",",repl="",regex=False)
+if (ds['SELISIH'].dtype == np.object_):
+    ds['SELISIH'] = ds['SELISIH'].str.replace(pat=",",repl="",regex=False)
 ds[ds['SELISIH'] == "#VALUE!"]
 #### Konversi jadi float
 ds.astype(dtype = {
